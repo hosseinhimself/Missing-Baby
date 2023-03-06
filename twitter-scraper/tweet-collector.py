@@ -20,16 +20,29 @@ def scrape(words, date_since, numtweet):
     # through twitter for the required tweets.
     # The number of tweets can be
     # restricted using .items(number of tweets)
+    flag1 = 0
+
+    api = tweepy.API(auth, wait_on_rate_limit=True)
     tweets = tweepy.Cursor(api.search_tweets,
-                           words, lang="en",
-                           since_id=date_since,
-                           tweet_mode='extended').items(numtweet)
+                                   words, lang="en",
+                                   since_id=date_since,
+                                   tweet_mode='extended').items(numtweet)
+
 
     # .Cursor() returns an iterable object. Each item in
     # the iterator has various attributes
     # that you can access to
     # get information about each tweet
-    list_tweets = [tweet for tweet in tweets]
+    flag2 = 0
+    while flag2 == 0:
+        try:
+            print("---Start Of listing tweets---")
+            list_tweets = [tweet for tweet in tweets]
+            flag2 = 1
+            print("Level 2 done")
+        except:
+            print("Error detected in level 2")
+            flag2 = 0
 
     # Counter to maintain Tweet Count
     i = 1
@@ -38,7 +51,6 @@ def scrape(words, date_since, numtweet):
     # list for extracting information about each tweet
     for tweet in list_tweets:
         try:
-            print('here')
             username = tweet.user.screen_name
             description = tweet.user.description
             location = tweet.user.location
@@ -92,11 +104,11 @@ if __name__ == '__main__':
     api = tweepy.API(auth)
 
     # Enter Hashtag and initial date
-    words = "Constance Marten OR Mark Gordon OR Constance Mark OR baby's death Victoria OR Marten Gordon OR Marten and Gordon"
-    date_since = '2023-02--01'
+    words = ""
+    date_since = '2023-01--23'
 
     # number of tweets you want to extract in one run
-    numtweet = 10
+    numtweet = 1000000
     scrape(words, date_since, numtweet)
     print('Scraping has completed!')
 
