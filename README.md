@@ -26,7 +26,7 @@ The table below outlines the methodology used to determine the exact emotion of 
 </tbody></table>
 
 The table presents a logical structure for mapping the resulting sentiment scores from VADER into the corresponding emotions. 
-The resulting sentiment scores of 'positive', 'negative', and 'neutral' are mapped into the emotions 'happy', 'curious', 'neutral',  'upset', and 'angry', respectively.
+The resulting sentiment scores of 'positive', 'neutral', and 'negative' are mapped into the emotions 'happy', 'curious', 'neutral',  'upset', and 'angry', respectively.
 
 The frequency of famous accounts was determined based on their followers, which were obtained from the user's profile information. 
 Hashtags were counted in the collected tweets to identify popular discussions on the platform. 
