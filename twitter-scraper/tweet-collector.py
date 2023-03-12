@@ -5,14 +5,18 @@ import pandas as pd
 # function to perform data extraction
 def scrape(words, date_since, numtweet):
     # Creating DataFrame using pandas
-    db = pd.DataFrame(columns=['username',
+    db = pd.DataFrame(columns=['tweetID',
+                               'username',
                                'description',
                                'location',
                                'following',
                                'followers',
                                'totaltweets',
                                'retweetcount',
+                               'tweetdate',
+                               'likes',
                                'link',
+                               'IDreplyTo',
                                'text',
                                'hashtags'])
 
@@ -51,6 +55,7 @@ def scrape(words, date_since, numtweet):
     # list for extracting information about each tweet
     for tweet in list_tweets:
         try:
+            ID = tweet.id
             username = tweet.user.screen_name
             description = tweet.user.description
             location = tweet.user.location
@@ -58,8 +63,16 @@ def scrape(words, date_since, numtweet):
             followers = tweet.user.followers_count
             totaltweets = tweet.user.statuses_count
             retweetcount = tweet.retweet_count
-            link = f"https://twitter.com/i/web/status/{tweet.id}"
+            date = tweet.created_at
+            try:
+                likes = tweet.retweeted_status.favorite_count
+
+            except:
+                likes = tweet.favorite_count
+
+            link = f"https://twitter.com/i/web/status/{ID}"
             hashtags = tweet.entities['hashtags']
+
 
             # Retweets can be distinguished by
             # a retweeted_status attribute,
@@ -75,12 +88,20 @@ def scrape(words, date_since, numtweet):
 
             # Here we are appending all the
             # extracted information in the DataFrame
-            ith_tweet = [username, description,
+
+            try:
+                replyto = api.get_status(ID).in_reply_to_status_id_str
+
+            except:
+
+                replyto = '-'
+
+            ith_tweet = [ID, username, description,
                          location, following,
                          followers, totaltweets,
-                         retweetcount, link, text, hashtext]
-            db.loc[len(db)] = ith_tweet
+                         retweetcount, date, likes, link, replyto, text, hashtext]
 
+            db.loc[len(db)] = ith_tweet
             # Function call to print tweet data on screen
             #printtweetdata(i, ith_tweet)
             i = i + 1
@@ -95,21 +116,20 @@ def scrape(words, date_since, numtweet):
 if __name__ == '__main__':
     # Enter your own credentials obtained
     # from your developer account
-    consumer_key = ""
-    consumer_secret = ""
-    access_key = ''
-    access_secret = ''
+    consumer_key = "RsmDXpxskVK1GAnrQ65GaIIXg"
+    consumer_secret = "b1tot7omkoWvPtIhpKVMOoEJizAx3ehnTLVBJppf1GWeVPqkDg"
+    access_key = '1451630228065898499-zPZvFGJ8oVNSIjqe1oEmoAESLxV2au'
+    access_secret = '5ktMoG4DpChBCI1URk216iIq2qY0cClOd3opMcIUv7R5c'
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_key, access_secret)
     api = tweepy.API(auth)
 
     # Enter Hashtag and initial date
-    words = ""
+    words = "constance marten"
     date_since = '2023-01--23'
 
     # number of tweets you want to extract in one run
     numtweet = 1000000
     scrape(words, date_since, numtweet)
     print('Scraping has completed!')
-
 
