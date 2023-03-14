@@ -30,6 +30,7 @@ def scrape(words, date_since, numtweet):
     tweets = tweepy.Cursor(api.search_tweets,
                                    words, lang="en",
                                    since_id=date_since,
+                                   until= date_until,
                                    tweet_mode='extended').items(numtweet)
 
 
@@ -116,18 +117,12 @@ def scrape(words, date_since, numtweet):
 if __name__ == '__main__':
     # Enter your own credentials obtained
     # from your developer account
-    consumer_key = "RsmDXpxskVK1GAnrQ65GaIIXg"
-    consumer_secret = "b1tot7omkoWvPtIhpKVMOoEJizAx3ehnTLVBJppf1GWeVPqkDg"
-    access_key = '1451630228065898499-zPZvFGJ8oVNSIjqe1oEmoAESLxV2au'
-    access_secret = '5ktMoG4DpChBCI1URk216iIq2qY0cClOd3opMcIUv7R5c'
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_key, access_secret)
-    api = tweepy.API(auth)
-
     # Enter Hashtag and initial date
-    words = "constance marten"
+    words = "constancemarten"
     date_since = '2023-01--23'
-
+    date_until = '2023-02--30'
     # number of tweets you want to extract in one run
     numtweet = 1000000
     scrape(words, date_since, numtweet)
